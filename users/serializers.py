@@ -56,27 +56,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         return token
 
 
-# def upload_to_s3(file, bucket_name, object_name, content_type):
-#     s3_client = boto3.client(
-#         "s3", aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY
-#     )
-#     s3_client.upload_fileobj(file, bucket_name, object_name, ExtraArgs={"ContentType": content_type})
-#     url = settings.MEDIA_URL + object_name
-#     return url
-#
-#
-# class UserProfileImageSerializer(serializers.ModelSerializer[CustomUser]):
-#     class Meta:
-#         model = CustomUser
-#         fields = ("profile_image",)
-#
-#     @staticmethod
-#     def update(instance, validated_data):
-#         file = validated_data.get("profile_image", None)
-#         if file:
-#             file_name = f"profile/user_{instance.id}_{file.name}"
-#             content_type = file.content_type
-#             url = upload_to_s3(file, settings.AWS_STORAGE_BUCKET_NAME, file_name, content_type)
-#             instance.profile_image = url
-#         instance.save()
-#         return instance
+class UserProfileImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CustomUser
+        fields = ['profile_image']

@@ -7,14 +7,12 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenRefreshView
 
-from config.settings import env
-
 from .models import CustomUser
 from .serializers import (
     CustomUserSerializer,
     CustomUserUpdateSerializer,
     MyTokenObtainPairSerializer,
-    # UserProfileImageSerializer,
+    UserProfileImageSerializer,
 )
 
 # import requests
@@ -74,7 +72,6 @@ class SignInView(APIView):
         token = serializer.get_token(user)
         refresh_token = str(token)
         access_token = str(token.access_token)
-        # serializer = self.serializer_class(user)
         response = Response(
             data={"message": "Successfully Sign In", "access": access_token, "refresh": refresh_token},
             status=status.HTTP_200_OK,
@@ -232,32 +229,19 @@ class UserDetailView(APIView):
         )
 
 
-# class UploadProfileImageView(APIView):
-    # serializer_class = UserProfileImageSerializer
-    # permission_classes = [IsAuthenticated]
+class UserProfileImageView(APIView):
+    serializer_class = UserProfileImageSerializer
+    permission_classes = [IsAuthenticated]
 
-    # def post(self, request):
-    #     user = request.user
-    #     db_user = CustomUser.objects.filter(pk=user.id).first()
-    #     existing_profile_image = db_user.profile_image
-    #     serializer = self.serializer_class(user, data=request.data)
-    #
-    #     if serializer.is_valid():
-    #         if existing_profile_image:
-    #             self.delete_s3_file(existing_profile_image)
-    #         serializer.save()
-    #         return Response(data={"message": "Successfully Upload Profile Image"}, status=status.HTTP_201_CREATED)
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    # @staticmethod
-    # def delete_s3_file(file_url):
-    #     s3_client = boto3.client(
-    #         "s3", aws_access_key_id=env("AWS_ACCESS_KEY_ID"), aws_secret_access_key=env("AWS_SECRET_ACCESS_KEY")
-    #     )
-    #
-    #     bucket_name = env("AWS_STORAGE_BUCKET_NAME")
-    #     prefix = "profile/"
-    #     file_name = str(file_url).split("/")[-1]
-    #     file_key = prefix + file_name
-    #
-    #     s3_client.delete_object(Bucket=bucket_name, Key=file_key)
+    def patch(self, request):
+        user = request.user
+        serializer = self.serializer_class(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                data={
+                    "message": "Successfully Profile Image Upload"
+                },
+                status=status.HTTP_201_CREATED
+            )
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -5,7 +5,7 @@ from .views import (  # KakaoSignInView,
     SignInView,
     SignOutView,
     SignUpView,
-    # UploadProfileImageView,
+    UserProfileImageView,
     UserDetailView,
 )
 
@@ -16,5 +16,5 @@ urlpatterns = [
     path("token-refresh", RefreshTokenView.as_view(), name="token-refresh"),
     path("sign-out", SignOutView.as_view(), name="sign-out"),
     path("detail", UserDetailView.as_view(), name="user-detail"),
-    # path("profile-image", UploadProfileImageView.as_view(), name="profile-image"),
+    path("profile-image", UserProfileImageView.as_view(), name="profile-image"),
 ]

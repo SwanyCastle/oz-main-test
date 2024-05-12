@@ -5,9 +5,9 @@
 #python manage.py collectstatic
 
 # Apply database migrations
-echo "Apply database migrations"
-python manage.py makemigrations
-python manage.py migrate
+#echo "Apply database migrations"
+#python manage.py makemigrations
+#python manage.py migrate
 
 # Start Gunicorn
 echo "Starting Gunicorn"
